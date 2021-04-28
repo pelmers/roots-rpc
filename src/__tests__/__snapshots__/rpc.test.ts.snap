@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rpc checks input type 1`] = `"Input validation failed for call id 0 on method TestRpcMethod"`;
+
+exports[`rpc checks return type 1`] = `[Error: Failed to validate return type of call id 0, method TestRpcMethod]`;
