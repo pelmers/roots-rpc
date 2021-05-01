@@ -43,8 +43,9 @@ export class RpcServer {
   register<I extends AnyJson, O extends AnyJson>(
     typeLoader: () => FN<I, O>,
     impl: (i: I) => Promise<O>
-  ): void {
+  ): Disposable {
     this.registry[typeLoader.name] = { type: typeLoader(), fn: impl };
+    return { dispose: () => delete this.registry[typeLoader.name] };
   }
 
   dispose() {
