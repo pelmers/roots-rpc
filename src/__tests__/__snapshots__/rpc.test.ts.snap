@@ -3,3 +3,7 @@
 exports[`rpc checks input type 1`] = `"Input validation failed for call id 0 on method TestRpcMethod"`;
 
 exports[`rpc checks return type 1`] = `[Error: Failed to validate return type of call id 0, method TestRpcMethod]`;
+
+exports[`rpc requires input value 1`] = `[Error: No argument passed for non-null input of RPC function TestRpcMethod]`;
+
+exports[`rpc sends error of observable 1`] = `[Error: Error: Test error message!!]`;

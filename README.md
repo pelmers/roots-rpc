@@ -4,6 +4,10 @@ This package implements a fully-typed yet dead-simple RPC library for
 Typescript without any codegen required. Supports calling functions with any
 JSON-encodeable parameters and return values.
 
+Also supports streaming results with observable-subscription pattern. See the
+[test file](https://github.com/pelmers/roots-rpc/blob/master/src/__tests__/rpc.test.ts)
+for usage examples.
+
 ```
 npm install roots-rpc
 ```
@@ -70,3 +74,5 @@ Roots because it's:
 - used in my [Seattle Trees website](https://seattletrees.pelmers.com)
 - ending in -ts, evoking Typescript
 - a simple base layer for programs to build upon
+
+https://pelmers.com/typesafe-rpc-without-codegen/
