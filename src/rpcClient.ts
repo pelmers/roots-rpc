@@ -6,9 +6,7 @@ import {
   AnyJson,
   AsyncFN,
   Disposable,
-  ErrorPayload,
   FNDecl,
-  ResultPayload,
   Observable,
   disposify,
   Message,
@@ -55,7 +53,7 @@ export class RpcClient {
     const { id } = msg;
     const { resolve, reject } = this.pendingCalls.get(id)!;
     if ("error" in msg) {
-      reject(msg.error);
+      reject(new Error(msg.error));
     } else if ("result" in msg) {
       resolve(msg.result);
     }
