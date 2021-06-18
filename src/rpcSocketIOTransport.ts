@@ -1,7 +1,7 @@
 import io from "socket.io";
 import { Message, RpcTransport } from "./rpcTypes";
 
-export class SocketTransport implements RpcTransport {
+export class SocketIOTransport implements RpcTransport {
   /**
    * Implements an RPC transport wrapper for socket.io library.
    * @param socket socket to send/receive data over
