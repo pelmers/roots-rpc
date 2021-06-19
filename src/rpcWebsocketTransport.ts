@@ -1,5 +1,7 @@
 import ws from "isomorphic-ws";
-import { Message, RpcTransport } from "./rpcTypes";
+import { Disposable, Message, RpcTransport } from "./rpcTypes";
+
+const PING_INTERVAL = 10000;
 
 /**
  * Implements an RPC transport wrapper for websocket servers and clients
@@ -7,8 +9,9 @@ import { Message, RpcTransport } from "./rpcTypes";
  * @param socket a websocket object that will connect to a corresponding client/server
  * @param key optional, add key if multiplexing connections on one socket
  */
-export class WebsocketTransport implements RpcTransport {
+export class WebsocketTransport implements RpcTransport, Disposable {
   queue: Message[] = [];
+  pingInterval: NodeJS.Timeout;
 
   constructor(private socket: ws, private key: string = "") {
     this.socket.addEventListener("open", () => {
@@ -16,7 +19,20 @@ export class WebsocketTransport implements RpcTransport {
         this.send(msg);
       }
       this.queue = [];
+      this.beginHeartbeat();
     });
+    if (this.socket.readyState === ws.OPEN) {
+      this.beginHeartbeat();
+    }
+    this.socket.addEventListener('close', () => this.dispose());
+  }
+
+  private beginHeartbeat() {
+    if (this.pingInterval == null) {
+      this.pingInterval = setInterval(() => {
+        this.socket.send(JSON.stringify({ key: this.key, ping: true }));
+      }, PING_INTERVAL);
+    }
   }
 
   send(msg: Message) {
@@ -29,14 +45,22 @@ export class WebsocketTransport implements RpcTransport {
 
   onMessage(cb: (msg: Message) => void) {
     const listener = (event: any) => {
-      const { msg, key } = JSON.parse(event.data);
+      const { msg, key, ping } = JSON.parse(event.data);
       if (key === this.key) {
-        cb(msg);
+        if (ping) {
+          this.socket.send(JSON.stringify({ key: this.key, ping: false }));
+        } else if (msg != null) {
+          cb(msg);
+        }
       }
     };
     this.socket.addEventListener("message", listener);
     return {
       dispose: () => this.socket.removeEventListener("message", listener),
     };
+  }
+
+  dispose() {
+    clearInterval(this.pingInterval);
   }
 }

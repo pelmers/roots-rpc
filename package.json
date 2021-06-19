@@ -1,6 +1,6 @@
 {
   "name": "roots-rpc",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "dist/index.js",
   "author": "Peter Elmers",
   "license": "MIT",

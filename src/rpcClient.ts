@@ -154,7 +154,13 @@ export class RpcClient {
 
   dispose() {
     this.disposable.dispose();
+    for (const call of this.pendingCalls.values()) {
+      call.reject(new Error("Client object disposed"));
+    }
     this.pendingCalls.clear();
+    for (const sub of this.subscriptions.values()) {
+      sub.onError && sub.onError(new Error("Client object disposed"));
+    }
     this.subscriptions.clear();
   }
 }
